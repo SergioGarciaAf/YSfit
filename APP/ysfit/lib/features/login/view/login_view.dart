@@ -1,23 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ysfit/features/login/bloc/login_bloc.dart';
+import 'package:ysfit/features/login/view/widgets/login_google.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: AppLoginWindows(),
+    return Scaffold(
+      body: BlocConsumer<LoginBloc, LoginState>(
+          builder: (context, state) => AppLoginWindows(state),
+          listener: _runningListener,
+          buildWhen: (previousState, currentState) => currentState is! LoginCompletedState,
+          listenWhen: (previousState, currentState) => currentState is LoginCompletedState),
+
       backgroundColor: Color.fromARGB(202, 242, 247, 240),
     );
+  }
+
+  void _runningListener(BuildContext context, LoginState state) {
+      if(state is LoginCompletedState) {
+        //Navigator.of(context).push();
+      }
   }
 }
 
 class AppLoginWindows extends StatelessWidget {
-  const AppLoginWindows({super.key});
+  AppLoginWindows(this.state);
+
+  final LoginState state;
 
   @override
   Widget build(BuildContext context) {
     // Envuelvo todo en SingleChildScrollView para que no se salga
-    return const SingleChildScrollView(
+    return Stack(children: [
+      Positioned.fill(child: LoginContent(state)),
+    ]);
+  }
+
+}
+
+class LoginContent extends StatelessWidget {
+  LoginContent(this.state);
+
+  final LoginState state;
+
+  @override
+  Widget build(BuildContext context)
+    => SingleChildScrollView(
       child: Column(
         children: [
           SizedBox(height: 40),
@@ -40,6 +70,12 @@ class AppLoginWindows extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 70, vertical: 22),
             child: EnterPassword(),
           ),
+
+          if(state is LoginLoadingState)
+            const CircularProgressIndicator(),
+
+          if(state is LoginErrorState)
+            ErrorText(),
 
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 70, vertical: 20),
@@ -73,7 +109,12 @@ class AppLoginWindows extends StatelessWidget {
         ],
       ),
     );
-  }
+}
+
+class ErrorText extends StatelessWidget {
+  @override
+  Widget build(BuildContext context)
+    => Text('Error');
 }
 
 class Apple extends StatelessWidget {
@@ -100,29 +141,7 @@ class Apple extends StatelessWidget {
   }
 }
 
-class Google extends StatelessWidget {
-  const Google({
-    super.key,
-  });
 
-  @override
-  Widget build(BuildContext context) {
-    return OutlinedButton.icon(
-      onPressed: () {},
-      icon: const Icon(Icons.g_mobiledata, size: 28),
-      label: const Text('Google'),
-      style: OutlinedButton.styleFrom(
-        foregroundColor: const Color.fromARGB(221, 0, 0, 0),
-        backgroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        side: const BorderSide(color: Colors.grey),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
-    );
-  }
-}
 
 class DividingLine extends StatelessWidget {
   const DividingLine({
@@ -173,9 +192,15 @@ class EnterButton extends StatelessWidget {
         foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
+
         ),
       ),
-      onPressed: () {},
+      /*
+      onPressed: state is LoginCompletedState
+        ? () => Navigator.of(context).push(MainPage())
+        : null,
+       */
+      onPressed: null,
       child: const Text(
         'Empieza el desafio',
         style: TextStyle(
