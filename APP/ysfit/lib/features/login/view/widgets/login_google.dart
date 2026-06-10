@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ysfit/features/login/bloc/login_bloc.dart';
+import 'package:ysfit/features/login/view/styles/styles.dart';
 
 class Google extends StatelessWidget {
   const Google({
@@ -9,17 +8,49 @@ class Google extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton.icon(
-      onPressed: () => context.read<LoginBloc>().add(LoginGoogleEvent()),
-      icon: const Icon(Icons.g_mobiledata, size: 28),
-      label: const Text('Google'),
-      style: OutlinedButton.styleFrom(
-        foregroundColor: const Color.fromARGB(221, 0, 0, 0),
-        backgroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        side: const BorderSide(color: Colors.grey),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+    return SizedBox(
+      width: 56,
+      height: 56,
+      child: OutlinedButton(
+        onPressed: () {},
+        style: OutlinedButton.styleFrom(
+          shape: const CircleBorder(),
+          backgroundColor: AppColors.black,
+          side: const BorderSide(color: AppColors.orange),
+          padding: EdgeInsets.zero,
+        ),
+        child: const Icon(
+          Icons.g_mobiledata,
+          size: 35,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+}
+
+class Apple extends StatelessWidget {
+  const Apple({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 56,
+      height: 56,
+      child: OutlinedButton(
+        onPressed: () {},
+        style: OutlinedButton.styleFrom(
+          shape: const CircleBorder(),
+          backgroundColor: AppColors.black,
+          side: const BorderSide(color: AppColors.orange),
+          padding: EdgeInsets.zero,
+        ),
+        child: const Icon(
+          Icons.apple,
+          size: 26,
+          color: Colors.white,
         ),
       ),
     );
